@@ -1,10 +1,14 @@
 package com.codefinity.firstrestapibooks.service;
 
+import com.codefinity.firstrestapibooks.dto.BookRequestDTO;
+import com.codefinity.firstrestapibooks.dto.BookResponseDTO;
+import com.codefinity.firstrestapibooks.exception.ApiException;
+import com.codefinity.firstrestapibooks.mapper.MapperBook;
 import com.codefinity.firstrestapibooks.model.Book;
 import com.codefinity.firstrestapibooks.repositroy.BookRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,19 +18,30 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    public List<Book> findAllBooks() {
-        return bookRepository.getAllBooks();
+    public List<BookResponseDTO> findAllBooks() {
+        return bookRepository.getAllBooks().stream()
+                .map(MapperBook::modelToResponseDto)
+                .toList();
     }
 
-    public Book createBook(@RequestBody Book book) {
-        return bookRepository.addBook(book);
+    public BookResponseDTO createBook(BookRequestDTO book) {
+        Book modelBook = MapperBook.dtoRequestToModel(book);
+        Book repositoryBook = bookRepository.addBook(modelBook);
+        return MapperBook.modelToResponseDto(repositoryBook);
     }
 
-    public Book updateBook(@PathVariable String id, @RequestBody Book book) {
-        return bookRepository.updateBook(id, book);
+    public BookResponseDTO updateBook(String id,BookRequestDTO book) {
+        Book modelBook = MapperBook.dtoRequestToModel(book);
+        Book repositoryBook = bookRepository.updateBook(id, modelBook);
+
+        if(repositoryBook == null) {
+            throw new ApiException("Not found book by id: " + id, HttpStatus.NOT_FOUND);
+        }
+
+        return MapperBook.modelToResponseDto(repositoryBook);
     }
 
-    public void deleteBook(@PathVariable String id) {
+    public void deleteBook(String id) {
         bookRepository.deleteBook(id);
     }
 
