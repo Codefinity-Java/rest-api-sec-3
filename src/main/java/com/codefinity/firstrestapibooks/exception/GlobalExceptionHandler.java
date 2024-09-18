@@ -9,6 +9,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<?> handleException(ApiException ex) {
+
+
+
         return new ResponseEntity<>(ErrorResponse
                 .builder()
                 .error(ex.getMessage())

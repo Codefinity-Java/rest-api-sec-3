@@ -3,8 +3,8 @@ package com.codefinity.firstrestapibooks.exception;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
 @Builder
+@Data
 public class ErrorResponse {
     private String error;
 }

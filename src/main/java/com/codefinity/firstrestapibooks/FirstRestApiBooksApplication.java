@@ -1,5 +1,6 @@
 package com.codefinity.firstrestapibooks;
 
+import com.codefinity.firstrestapibooks.exception.ErrorResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
