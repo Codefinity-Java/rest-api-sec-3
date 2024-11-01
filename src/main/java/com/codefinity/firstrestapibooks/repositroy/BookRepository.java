@@ -1,49 +1,16 @@
 package com.codefinity.firstrestapibooks.repositroy;
 
 import com.codefinity.firstrestapibooks.model.Book;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
-import java.util.*;
+public interface BookRepository {
 
-@Repository
-public class BookRepository {
-    private final List<Book> books = Collections.synchronizedList(new ArrayList<>());
+    List<Book> getAllBooks();
 
-    public List<Book> getAllBooks() {
-        return books;
-    }
+    Book addBook(Book book);
 
-    public Book addBook(Book book) {
-        String id = UUID.randomUUID().toString();
-        book.setId(id);
+    Book updateBook(String id, Book book);
 
-        books.add(book);
-        return book;
-    }
-
-    public Book updateBook(String id, Book book) {
-        Optional<Book> bookOptional = books.stream()
-                .filter(bookStream -> bookStream.getId().equals(id))
-                .findFirst();
-
-        Book result = null;
-        if(bookOptional.isPresent()) {
-            result = bookOptional.get();
-            result.setName(book.getName());
-            result.setAuthor(book.getAuthor());
-            result.setPrice(book.getPrice());
-        }
-
-        return result;
-    }
-
-    public void deleteBook(String id) {
-        Optional<Book> bookOptional = books.stream()
-                .filter(bookStream -> bookStream.getId().equals(id))
-                .findFirst();
-
-        bookOptional.ifPresent(books::remove);
-    }
+    void deleteBook(String id);
 }
